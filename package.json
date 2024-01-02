@@ -1,0 +1,8 @@
+{
+  "dependencies": {
+    "@webref/css": "^6.10.1",
+    "@webref/elements": "^2.2.2",
+    "@webref/events": "^1.9.2",
+    "@webref/idl": "^3.42.3"
+  }
+}
