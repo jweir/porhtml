@@ -4,5 +4,4 @@
 
 # typed: false
 
-module T::Private::Methods::MethodHooks; end
-module T::Private::Methods::SingletonMethodHooks; end
+module ERB::Escape; end
