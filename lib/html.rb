@@ -1,5 +1,6 @@
 # typed: strict
 
+require 'debug'
 require 'sorbet-runtime'
 require './lib/html/node_definitions'
 require './lib/html/attribute_definitions'
@@ -10,11 +11,26 @@ module Html
   extend T::Sig
 
   # nodoc
-  class Element
-    extend T::Sig
+  class Template
+    def initialize(buffer)
+      @buffer = buffer
+    end
 
-    sig { returns(String) }
-    def to_html = ''
+    include Html::NodeDefinitions
+
+    def text(value)
+      @buffer << ERB::Escape.html_escape(value)
+    end
+
+    private
+
+    def write(tag, attr, &)
+      lattr = ''
+      attr.each { lattr << _1.to_attr } if attr.any?
+      @buffer << '<' << tag << lattr << '>'
+      instance_eval(&)
+      @buffer << '</' << tag << '>'
+    end
   end
 
   # nodoc
@@ -35,53 +51,4 @@ module Html
 
     extend Html::AttributeDefinitions
   end
-
-  # nodoc
-  class Node < Element
-    extend T::Sig
-
-    sig { params(tag: String, attributes: T::Array[Attribute], elements: T::Array[Element]).void }
-    def initialize(tag, attributes, elements)
-      @tag = tag
-      @attributes = attributes
-      @elements = elements
-    end
-
-    sig { returns(String) }
-    def to_html
-      if @attributes.any?
-        attr = ''
-        @attributes.each { attr << _1.to_attr }
-        local_acc = "<#{@tag}#{attr}>"
-      else
-        local_acc = "<#{@tag}>"
-      end
-      @elements.each { local_acc << _1.to_html }
-      local_acc << "</#{@tag}>"
-    end
-  end
-
-  # nodoc
-  class Text < Element
-    extend T::Sig
-    include ERB::Escape
-
-    sig { params(body: String).void }
-    def initialize(body)
-      @body = body
-    end
-
-    # FIXME: must be HTML escaped
-    sig { returns(String) }
-    def to_html
-      html_escape(@body)
-    end
-  end
-
-  sig { params(body: String).returns(Html::Text) }
-  def text(body)
-    Text.new(body)
-  end
-
-  include Html::NodeDefinitions
 end

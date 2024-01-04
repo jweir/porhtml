@@ -4,30 +4,29 @@ require './lib/html'
 require 'minitest/autorun'
 
 class HtmlTest < Minitest::Test
-  class HTEX
-    include Html
-  end
-
-  HT = HTEX.new
   A = Html::Attribute
   def test_to_html
-    x = HT.h1([],
-              [HT.b([],
-                    [HT.text('Hello')])])
-    assert_equal '<h1><b>Hello</b></h1>', x.to_html
+    t = Html::Template.new ''
+    x = t.h1([]) do
+      b([]) { text 'Hello' }
+    end
+    assert_equal '<h1><b>Hello</b></h1>', x
   end
 
   def test_attributes
+    t = Html::Template.new ''
     # TODO: allow things like &nbsp;? I don't think so
     # FIXME sanitize quotes?
-    x = HT.h1([A.id('big'), A.klass('a "b" c')],
-              [HT.b([],
-                    [HT.text('Hello & good "byte"')])])
-    assert_equal '<h1 id="big" class="a &quot;b&quot; c"><b>Hello &amp; good &quot;byte&quot;</b></h1>', x.to_html
+    x = t.h1([A.id('big'), A.klass('a "b" c')]) do
+      b([]) { text('Hello & good "byte"') }
+    end
+
+    assert_equal '<h1 id="big" class="a &quot;b&quot; c"><b>Hello &amp; good &quot;byte&quot;</b></h1>', x
   end
 
   def test_text_html_is_escaped
-    assert_equal '&lt;script&gt;x&lt;/script&gt;', HT.text('<script>x</script>').to_html
+    t = Html::Template.new ''
+    assert_equal '&lt;script&gt;x&lt;/script&gt;', t.text('<script>x</script>')
   end
 
   # TODO

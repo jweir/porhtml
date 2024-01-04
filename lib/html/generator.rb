@@ -1,5 +1,5 @@
 # frozen_string_literal: true
-# typed: strict
+# typed: false
 
 require 'json'
 require 'sorbet-runtime'
@@ -14,9 +14,10 @@ module Html
       source = File.read 'node_modules/@webref/elements/html.json'
       nodes = JSON.parse(source)['elements'].map do |el|
         <<~SRC
-          sig {params(attributes: T::Array[Html::Attribute], elements: T::Array[Html::Element]).returns(Html::Element)}
-          def #{el['name']}(attributes, elements)
-            Html::Node.new("#{el['name']}".freeze, attributes, elements)
+
+          #sig {params(attributes: T::Array[Html::Attribute], elements: T.proc.void).returns(Html::Element)}
+          def #{el['name']}(attributes, &elements)
+            write('#{el['name']}', attributes, &elements)
           end
         SRC
       end
