@@ -1,54 +1,65 @@
-# typed: strict
+# typed: false
 
-require 'debug'
-require 'sorbet-runtime'
+# require 'sorbet-runtime'
 require './lib/html/node_definitions'
 require './lib/html/attribute_definitions'
 require 'erb/escape'
 
 # nodoc
 module Html
-  extend T::Sig
-
   # nodoc
   class Template
-    def initialize(buffer)
-      @buffer = buffer
+    def initialize
+      @context = self
+      @buffer = +''
     end
 
     include Html::NodeDefinitions
+
+    # Given a proc instert the HTML into this template
+    def insert(func)
+      instance_exec(&func) if func
+    end
 
     def text(value)
       @buffer << ERB::Escape.html_escape(value)
     end
 
+    def render
+      @buffer
+    end
+
     private
 
-    def write(tag, attr, &)
-      lattr = ''
-      attr.each { lattr << _1.to_attr } if attr.any?
-      @buffer << '<' << tag << lattr << '>'
-      instance_eval(&)
-      @buffer << '</' << tag << '>'
+    def write(open, close, attr = nil)
+      @buffer << open << attr.to_s << '>'
+      yield if block_given?
+      @buffer << close
+      self
     end
+
+    # TODO: write "void" elements
   end
 
   # nodoc
   class Attribute
-    extend T::Sig
     include ::ERB::Escape
 
-    sig { params(name: String, value: String).void }
-    def initialize(name, value)
-      @name = name
-      @value = value
+    include Html::AttributeDefinitions
+
+    def initialize(&block)
+      @buffer = +''
+      instance_eval(&block) # slower than yield self
     end
 
-    sig { returns(String) }
-    def to_attr
-      " #{@name}=\"#{html_escape(@value)}\""
+    def to_s
+      @buffer
     end
 
-    extend Html::AttributeDefinitions
+    private
+
+    def write(name, value)
+      @buffer << name << html_escape(value) << '"'
+    end
   end
 end

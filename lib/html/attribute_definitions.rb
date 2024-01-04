@@ -1,45 +1,38 @@
 # frozen_string_literal: true
-# typed: strict
+# typed: false
 
 module Html
   # nodoc
   module AttributeDefinitions
-    extend T::Sig
+    # extend T::Sig
 
-    sig { params(value: String).returns(Attribute) }
     def id(value)
-      Attribute.new('id', value)
+      write(' id="', value)
     end
 
     # FIXME: need to auto map `class` to `klass`
-    sig { params(value: String).returns(Attribute) }
     def klass(value)
-      Attribute.new('class', value)
+      write(' class="', value)
     end
 
-    sig { params(value: String).returns(Attribute) }
     def href(value)
-      Attribute.new('href', value)
+      write(' href="', value)
     end
 
-    sig { params(value: String).returns(Attribute) }
     def rel(value)
-      Attribute.new('rel', value)
+      write(' rel="', value)
     end
 
-    sig { params(value: String).returns(Attribute) }
     def content(value)
-      Attribute.new('content', value)
+      write(' content="', value)
     end
 
-    sig { params(value: String).returns(Attribute) }
     def name(value)
-      Attribute.new('name', value)
+      write(' name="', value)
     end
 
-    sig { params(value: String).returns(Attribute) }
     def title(value)
-      Attribute.new('title', value)
+      write(' title="', value)
     end
   end
 end
