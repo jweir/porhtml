@@ -33,7 +33,7 @@ module Html
 
     def write(open, close, attr = nil)
       @buffer << open << attr.to_s << '>'
-      yield if block_given?
+      yield
       @buffer << close
       self
     end
