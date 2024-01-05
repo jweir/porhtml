@@ -30,13 +30,16 @@ module Html
 
     private
 
+    END_TAG = '>'.freeze
+    CLOSE = '/>'.freeze
+
     def write(open, close, attr = nil, &block)
       if block
-        @buffer << open << attr.to_s << '>'
+        @buffer << open << attr.to_s << END_TAG
         yield
         @buffer << close
       else
-        @buffer << open << attr.to_s << '/>'
+        @buffer << open << attr.to_s << CLOSE
       end
       self
     end
@@ -59,8 +62,10 @@ module Html
       @buffer
     end
 
+    QUOTE = '"'.freeze
+
     def write(name, value)
-      @buffer << name << ERB::Escape.html_escape(value) << '"'
+      @buffer << name << ERB::Escape.html_escape(value) << QUOTE
     end
 
     private
