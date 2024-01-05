@@ -10,15 +10,15 @@ class Layout < Html::Template
   A = Html::Attribute
 
   def call
-    title(A.new { title('Example') }) {}
+    title(A.new { title('Example') })
     meta(A.new do
            name('viewport')
            content('width=device-width,initial-scale=1')
-         end) {}
+         end)
     link(A.new do
            href('/assets/tailwind.css')
            rel('stylesheet')
-         end) {}
+         end)
     body(A.new { klass('bg-zinc-100') }) do
       nav(
         A.new do
@@ -26,37 +26,29 @@ class Layout < Html::Template
           id('main_nav')
         end
       ) do
-        ul([]) do
-          li(A.new { klass('p-5') }) { a(A.new { href('/') }) { text('Home') } }
-          li(A.new { klass('p-5') }) { a(A.new { href('/about') }) { text('About') } }
-          li(A.new { klass('p-5') }) { a(A.new { href('/contact') }) { text('Concat') } }
+        attr = A.new
+        attr.klass 'p-5'
+
+        ul do
+          li(attr) { a(A.new { href('/') }) { text('Home') } }
+          li(attr) { a(A.new { href('/about') }) { text('About') } }
+          li(attr) { a(A.new { href('/contact') }) { text('Concat') } }
         end
       end
 
-      h1([]) { text('Hi') }
+      h1 { text('Hi') }
+
+      attr = A.new
+      attr.id('test1')
+      attr.id('a')
 
       table(A.new { id('test') }) do
-        tr([]) do
-          td(A.new do
-               id('test1')
-               klass('a')
-             end) { span([]) { text('Hi') } }
-          td(A.new do
-               id('test1')
-               klass('a')
-             end) { span([]) { text('Hi') } }
-          td(A.new do
-               id('test1')
-               klass('a')
-             end) { span([]) { text('Hi') } }
-          td(A.new do
-               id('test1')
-               klass('a')
-             end) { span([]) { text('Hi') } }
-          td(A.new do
-               id('test1')
-               klass('a')
-             end) { span([]) { text('Hi') } }
+        tr do
+          td(attr) { span { text('Hi') } }
+          td(attr) { span { text('Hi') } }
+          td(attr) { span { text('Hi') } }
+          td(attr) { span { text('Hi') } }
+          td(attr) { span { text('Hi') } }
         end
       end
     end

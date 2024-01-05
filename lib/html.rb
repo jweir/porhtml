@@ -10,7 +10,6 @@ module Html
   # nodoc
   class Template
     def initialize
-      @context = self
       @buffer = +''
     end
 
@@ -31,35 +30,41 @@ module Html
 
     private
 
-    def write(open, close, attr = nil)
-      @buffer << open << attr.to_s << '>'
-      yield
-      @buffer << close
+    def write(open, close, attr = nil, &block)
+      if block
+        @buffer << open << attr.to_s << '>'
+        yield
+        @buffer << close
+      else
+        @buffer << open << attr.to_s << '/>'
+      end
       self
     end
-
-    # TODO: write "void" elements
   end
 
   # nodoc
   class Attribute
-    include ::ERB::Escape
-
     include Html::AttributeDefinitions
 
-    def initialize(&block)
-      @buffer = +''
-      instance_eval(&block) # slower than yield self
+    def initialize(buffer = +'', &block)
+      @buffer = buffer
+      instance_eval(&block) if block
+    end
+
+    def <<(other)
+      self.class.new(@buffer.dup << other.to_s.dup)
     end
 
     def to_s
       @buffer
     end
 
+    def write(name, value)
+      @buffer << name << ERB::Escape.html_escape(value) << '"'
+    end
+
     private
 
-    def write(name, value)
-      @buffer << name << html_escape(value) << '"'
-    end
+    attr_reader :buffer
   end
 end
