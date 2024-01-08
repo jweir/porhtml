@@ -29,7 +29,13 @@ see https://github.com/w3c/webref for specification
 
 ## TODO
 
-Generated the attributes based on the available specs.  
+Generate the attributes based on the available specs.  
+Return Sorbet typining (Ruby standart typing too?)
+Test
+Define a recommend way to define layouts and templates
+Support doctype
 
-Improve Performance.
+## Later
+
+Support SVG
 
