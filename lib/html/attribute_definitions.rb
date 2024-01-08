@@ -34,5 +34,13 @@ module Html
     def title(value)
       write(' title="', value)
     end
+
+    def src(value)
+      write(' src="', value)
+    end
+
+    def alt(value)
+      write(' alt="', value)
+    end
   end
 end

@@ -57,23 +57,28 @@ module Html
   class Attribute
     include Html::AttributeDefinitions
 
+    # only allow nil or objects that respond to `safe_attribute`
+    def self.to_html(attr)
+      attr&.safe_attribute.to_s
+    end
+
     def initialize(buffer = +'', &block)
       @buffer = buffer
       instance_eval(&block) if block
     end
 
     def <<(other)
-      self.class.new(@buffer.dup << other.to_s.dup)
-    end
-
-    def to_s
-      @buffer
+      self.class.new(@buffer.dup << other.safe_attribute.dup)
     end
 
     QUOTE = '"'.freeze
 
     def write(name, value)
       @buffer << name << ERB::Escape.html_escape(value) << QUOTE
+    end
+
+    def safe_attribute
+      @buffer
     end
 
     private

@@ -21,6 +21,8 @@ class HtmlTest < Minitest::Test
 
   Item = Struct.new(:name)
 
+  # TODO: support comments
+
   def test_html
     assert_equal \
       '<h1 id="big" class="a &quot;b&quot; c">ITEM<b>Hello &amp; good &quot;byte&quot;</b></h1>',
@@ -63,9 +65,9 @@ class HtmlTest < Minitest::Test
 
     c = a << b
 
-    assert_equal 'class="ok" id="1"', a.to_s.strip
-    assert_equal 'name="foo"', b.to_s.strip
-    assert_equal 'class="ok" id="1" name="foo"', c.to_s.strip
+    assert_equal 'class="ok" id="1"', a.safe_attribute.strip
+    assert_equal 'name="foo"', b.safe_attribute.strip
+    assert_equal 'class="ok" id="1" name="foo"', c.safe_attribute.strip
   end
 
   require 'debug'
@@ -102,7 +104,84 @@ class HtmlTest < Minitest::Test
       id="4" class="4" rel="4"
     STYLE
 
-    assert_equal expected.strip, outputs.map(&:to_s).sort.map(&:strip).join("\n").strip
+    assert_equal expected.strip, outputs.map(&:safe_attribute).sort.map(&:strip).join("\n").strip
+  end
+end
+
+# set of OpenAI generated tests
+class HtmlTemplateTest < Minitest::Test
+  A = Html::Attribute
+  def setup
+    @template = Html::Template.new
+  end
+
+  def test_text_sanitization
+    unsafe_string = "<script>alert('XSS');</script>"
+    @template.text(unsafe_string)
+    assert_equal '&lt;script&gt;alert(&#39;XSS&#39;);&lt;/script&gt;', @template.render
+  end
+
+  def test_html_node_creation
+    @template.html do
+      head do
+        title { text 'My Page Title' }
+      end
+      body do
+        h1 { text 'Heading' }
+        p { text 'This is a paragraph.' }
+      end
+    end
+    expected_output = '<html><head><title>My Page Title</title></head><body><h1>Heading</h1><p>This is a paragraph.</p></body></html>'
+    assert_equal expected_output, @template.render
+  end
+
+  def test_attribute_sanitization
+    @template.a(A.new { href "javascript:alert('XSS')" }) { text 'Click me' }
+    assert_match(/href="javascript:alert\(&#39;XSS&#39;\)"/, @template.render)
+  end
+
+  def test_attribute_quoting
+    @template.p(A.new { klass 'class"with"quotes' }) { text 'Test' }
+    assert_match(/class="class&quot;with&quot;quotes"/, @template.render)
+  end
+
+  def test_self_closing_tags
+    @template.img(A.new { src('image.png') && alt('An image') })
+    assert_match(%r{<img src="image.png" alt="An image"/>}, @template.render)
+  end
+
+  def test_invalid_html_escaping
+    @template.text('<html><body>Invalid HTML</body></html>')
+    assert_equal '&lt;html&gt;&lt;body&gt;Invalid HTML&lt;/body&gt;&lt;/html&gt;', @template.render
+  end
+
+  def test_script_tag_escaping
+    @template.script { text "console.log('Hello, World!');" }
+    assert_equal '<script>console.log(&#39;Hello, World!&#39;);</script>', @template.render
+  end
+
+  def test_only_allows_attributes
+    assert_raises do
+      @template.p(klass: 'my-class') { text 'Test' }
+      @template.render
+    end
+  end
+
+  def test_attribute_method_aliasing
+    @template.p(A.new { klass 'my-class' }) { text 'Test' }
+    assert_match(/class="my-class"/, @template.render)
+  end
+
+  def test_html_structure
+    @template.html do
+      body do
+        div(A.new { id 'main' }) do
+          p { text 'Nested content' }
+        end
+      end
+    end
+    expected_structure = '<html><body><div id="main"><p>Nested content</p></div></body></html>'
+    assert_equal expected_structure, @template.render
   end
 end
 
