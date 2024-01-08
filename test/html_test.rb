@@ -27,6 +27,15 @@ class HtmlTest < Minitest::Test
       X.new.call(Item.new('ITEM')).render
   end
 
+  def test_html_appending_and_binding
+    t = Html::Template.new
+    value = 'ok' # this would be bound to the block
+    @value = 'not_present' # this should not be bound
+    t.h1 { b { text(value) } }
+    t.span { text(@value) }
+    assert_equal '<h1><b>ok</b></h1><span></span>', t.render
+  end
+
   def test_without_a_block
     assert_equal \
       '<title title="Ok"/>',

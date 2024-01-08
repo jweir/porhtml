@@ -34,12 +34,20 @@ module Html
     CLOSE = '/>'.freeze
 
     def write(open, close, attr = nil, &block)
+      @buffer << open << Attribute.to_html(attr)
       if block
-        @buffer << open << attr.to_s << END_TAG
-        yield
+        @buffer << END_TAG
+
+        begin
+          yield
+        # this is faster, at least in the default than using an if and checking
+        # the type on the receiver
+        rescue StandardError
+          instance_eval(&block)
+        end
         @buffer << close
       else
-        @buffer << open << attr.to_s << CLOSE
+        @buffer << CLOSE
       end
       self
     end
