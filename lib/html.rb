@@ -13,7 +13,9 @@ module Html
       @buffer = +''
     end
 
-    include Html::NodeDefinitions
+    include Html::NodeDefinitions::HTMLAllElements
+
+    # TODO: doctype
 
     # Given a proc instert the HTML into this template
     def insert(func)
@@ -35,6 +37,7 @@ module Html
 
     def write(open, close, attr = nil, &block)
       @buffer << open << Attribute.to_html(attr)
+
       if block
         @buffer << END_TAG
 
@@ -49,6 +52,7 @@ module Html
       else
         @buffer << CLOSE
       end
+
       self
     end
   end
