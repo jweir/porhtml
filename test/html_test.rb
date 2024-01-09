@@ -13,6 +13,7 @@ class HtmlTest < Minitest::Test
            klass('a "b" c')
          end) do
         text(item.name)
+        br {}
         b { text('Hello & good "byte"') }
         insert(content)
       end
@@ -25,7 +26,7 @@ class HtmlTest < Minitest::Test
 
   def test_html
     assert_equal \
-      '<h1 id="big" class="a &quot;b&quot; c">ITEM<b>Hello &amp; good &quot;byte&quot;</b></h1>',
+      '<h1 id="big" class="a &quot;b&quot; c">ITEM<br/><b>Hello &amp; good &quot;byte&quot;</b></h1>',
       X.new.call(Item.new('ITEM')).render
   end
 
@@ -46,7 +47,7 @@ class HtmlTest < Minitest::Test
 
   def test_html_with_extension
     assert_equal \
-      '<h1 id="big" class="a &quot;b&quot; c">ITEM<b>Hello &amp; good &quot;byte&quot;</b><b>ok</b></h1>',
+      '<h1 id="big" class="a &quot;b&quot; c">ITEM<br/><b>Hello &amp; good &quot;byte&quot;</b><b>ok</b></h1>',
       X.new.call(Item.new('ITEM'), content: -> { b { text 'ok' } }).render
   end
 
@@ -119,6 +120,16 @@ class HtmlTemplateTest < Minitest::Test
     unsafe_string = "<script>alert('XSS');</script>"
     @template.text(unsafe_string)
     assert_equal '&lt;script&gt;alert(&#39;XSS&#39;);&lt;/script&gt;', @template.render
+  end
+
+  def test_void_elements
+    r = Html::Template.new.html do
+      br
+      hr
+      img(A.new { href '/image' })
+    end
+
+    assert_equal '<html><br/><hr/><img href="/image"/></html>', r.render
   end
 
   def test_html_node_creation

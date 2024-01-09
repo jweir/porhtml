@@ -22,20 +22,23 @@ module Html
     end
 
     module HTMLBaseElement
-      def base(attributes = nil, &elements)
-        write('<base', '</base>', attributes, &elements)
+      def base(attributes = nil)
+        # no child elements allowed and no closing tag
+        write('<base', '>', attributes)
       end
     end
 
     module HTMLLinkElement
-      def link(attributes = nil, &elements)
-        write('<link', '</link>', attributes, &elements)
+      def link(attributes = nil)
+        # no child elements allowed and no closing tag
+        write('<link', '>', attributes)
       end
     end
 
     module HTMLMetaElement
-      def meta(attributes = nil, &elements)
-        write('<meta', '</meta>', attributes, &elements)
+      def meta(attributes = nil)
+        # no child elements allowed and no closing tag
+        write('<meta', '>', attributes)
       end
     end
 
@@ -196,8 +199,9 @@ module Html
         write('<bdo', '</bdo>', attributes, &elements)
       end
 
-      def wbr(attributes = nil, &elements)
-        write('<wbr', '</wbr>', attributes, &elements)
+      def wbr(attributes = nil)
+        # no child elements allowed and no closing tag
+        write('<wbr', '>', attributes)
       end
 
       def summary(attributes = nil, &elements)
@@ -294,8 +298,9 @@ module Html
     end
 
     module HTMLHRElement
-      def hr(attributes = nil, &elements)
-        write('<hr', '</hr>', attributes, &elements)
+      def hr(attributes = nil)
+        # no child elements allowed and no closing tag
+        write('<hr', '>', attributes)
       end
     end
 
@@ -384,8 +389,9 @@ module Html
     end
 
     module HTMLBRElement
-      def br(attributes = nil, &elements)
-        write('<br', '</br>', attributes, &elements)
+      def br(attributes = nil)
+        # no child elements allowed and no closing tag
+        write('<br', '>', attributes)
       end
     end
 
@@ -406,14 +412,16 @@ module Html
     end
 
     module HTMLSourceElement
-      def source(attributes = nil, &elements)
-        write('<source', '</source>', attributes, &elements)
+      def source(attributes = nil)
+        # no child elements allowed and no closing tag
+        write('<source', '>', attributes)
       end
     end
 
     module HTMLImageElement
-      def img(attributes = nil, &elements)
-        write('<img', '</img>', attributes, &elements)
+      def img(attributes = nil)
+        # no child elements allowed and no closing tag
+        write('<img', '>', attributes)
       end
     end
 
@@ -424,8 +432,9 @@ module Html
     end
 
     module HTMLEmbedElement
-      def embed(attributes = nil, &elements)
-        write('<embed', '</embed>', attributes, &elements)
+      def embed(attributes = nil)
+        # no child elements allowed and no closing tag
+        write('<embed', '>', attributes)
       end
     end
 
@@ -448,8 +457,9 @@ module Html
     end
 
     module HTMLTrackElement
-      def track(attributes = nil, &elements)
-        write('<track', '</track>', attributes, &elements)
+      def track(attributes = nil)
+        # no child elements allowed and no closing tag
+        write('<track', '>', attributes)
       end
     end
 
@@ -460,8 +470,9 @@ module Html
     end
 
     module HTMLAreaElement
-      def area(attributes = nil, &elements)
-        write('<area', '</area>', attributes, &elements)
+      def area(attributes = nil)
+        # no child elements allowed and no closing tag
+        write('<area', '>', attributes)
       end
     end
 
@@ -482,8 +493,9 @@ module Html
         write('<colgroup', '</colgroup>', attributes, &elements)
       end
 
-      def col(attributes = nil, &elements)
-        write('<col', '</col>', attributes, &elements)
+      def col(attributes = nil)
+        # no child elements allowed and no closing tag
+        write('<col', '>', attributes)
       end
     end
 
@@ -530,8 +542,9 @@ module Html
     end
 
     module HTMLInputElement
-      def input(attributes = nil, &elements)
-        write('<input', '</input>', attributes, &elements)
+      def input(attributes = nil)
+        # no child elements allowed and no closing tag
+        write('<input', '>', attributes)
       end
     end
 
