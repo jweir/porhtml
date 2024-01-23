@@ -17,3 +17,7 @@ Metrics/ModuleLength:
 
 Naming/BlockForwarding:
   Enabled: false
+
+Metrics/MethodLength:
+  Enabled: false
+

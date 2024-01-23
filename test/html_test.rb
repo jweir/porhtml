@@ -2,8 +2,11 @@
 
 require './lib/html'
 require 'minitest/autorun'
+require 'minitest/spec'
 
 class HtmlTest < Minitest::Test
+  extend Minitest::Spec::DSL
+
   A = Html::Attribute
 
   class X < Html::Template
@@ -13,21 +16,64 @@ class HtmlTest < Minitest::Test
            klass('a "b" c')
          end) do
         text(item.name)
-        br {}
+        br
         b { text('Hello & good "byte"') }
-        insert(content)
+        insert(content) if content
       end
+    end
+  end
+
+  class Y < Html::Template
+    def call(item)
+      div(A.new { id('ok') }) { text item.name }
+      insert(Z.new.call)
+    end
+  end
+
+  class Z < Html::Template
+    def call
+      h1 { text 'Z' }
     end
   end
 
   Item = Struct.new(:name)
 
+  specify 'comments supported' do
+    assert_equal '<p><!--no comment--></p>', Html::Template.new.p { comment { text 'no comment' } }.render
+    assert_equal '<p><!----></p>', Html::Template.new.p { comment }.render, 'empty comment'
+  end
+
+  specify 'insert can take a template' do
+    result = Y.new.call(Item.new('Joe'))
+    assert_equal result.render, '<div id="ok">Joe</div><h1>Z</h1>'
+  end
+
   # TODO: support comments
+  # TODO: support CDATA
 
   def test_html
     assert_equal \
       '<h1 id="big" class="a &quot;b&quot; c">ITEM<br/><b>Hello &amp; good &quot;byte&quot;</b></h1>',
       X.new.call(Item.new('ITEM')).render
+  end
+
+  def test_whitespace
+    t = Html::Template.new.html do
+      text(
+        <<~TXT
+          Hello,
+
+          My name is Joe.
+          Bye.
+        TXT
+      )
+    end
+
+    assert_equal "<html>Hello,\n\nMy name is Joe.\nBye.\n</html>", t.render
+  end
+
+  def test_doctype
+    assert_equal '<!DOCTYPE html>', Html::Template.new.doctype.render
   end
 
   def test_html_appending_and_binding
@@ -53,7 +99,7 @@ class HtmlTest < Minitest::Test
 
   def test_text_html_is_escaped
     t = Html::Template.new
-    assert_equal '&lt;script&gt;x&lt;/script&gt;', t.text('<script>x</script>')
+    assert_equal '&lt;script&gt;x&lt;/script&gt;', t.text('<script>x</script>').render
   end
 
   def test_attribute

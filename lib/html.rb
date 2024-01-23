@@ -8,38 +8,48 @@ require 'erb/escape'
 # nodoc
 module Html
   # nodoc
-  class Template
+  class Core
     def initialize
-      @buffer = +''
+      @__buffer = +''
     end
 
-    include Html::NodeDefinitions::HTMLAllElements
-
-    # TODO: doctype
-
-    # Given a proc instert the HTML into this template
     def insert(func)
-      instance_exec(&func) if func
+      begin
+        @__buffer << func.render
+      rescue StandardError
+        instance_exec(&func)
+      end
+      self
     end
 
     def text(value)
-      @buffer << ERB::Escape.html_escape(value)
+      @__buffer << ERB::Escape.html_escape(value)
+      self
+    end
+
+    def comment(&elements)
+      write('<!--', '-->', nil, closing_char: '', closing_void_char: '-->', &elements)
+    end
+
+    def doctype
+      @__buffer << '<!DOCTYPE html>'
+      self
     end
 
     def render
-      @buffer
+      @__buffer
     end
 
     private
 
-    END_TAG = '>'.freeze
-    CLOSE = '/>'.freeze
+    CLOSE = '>'.freeze
+    CLOSE_VOID = '/>'.freeze
 
-    def write(open, close, attr = nil, &block)
-      @buffer << open << Attribute.to_html(attr)
+    def write(open, close, attr = nil, closing_char: CLOSE, closing_void_char: CLOSE_VOID, &block)
+      @__buffer << open << Attribute.to_html(attr)
 
       if block
-        @buffer << END_TAG
+        @__buffer << closing_char
 
         begin
           yield
@@ -48,13 +58,18 @@ module Html
         rescue StandardError
           instance_eval(&block)
         end
-        @buffer << close
+        @__buffer << close
       else
-        @buffer << CLOSE
+        @__buffer << closing_void_char
       end
 
       self
     end
+  end
+
+  # nodoc
+  class Template < Html::Core
+    include Html::NodeDefinitions::HTMLAllElements
   end
 
   # nodoc
@@ -67,26 +82,24 @@ module Html
     end
 
     def initialize(buffer = +'', &block)
-      @buffer = buffer
+      @__buffer = buffer
       instance_eval(&block) if block
     end
 
     def <<(other)
-      self.class.new(@buffer.dup << other.safe_attribute.dup)
-    end
-
-    QUOTE = '"'.freeze
-
-    def write(name, value)
-      @buffer << name << ERB::Escape.html_escape(value) << QUOTE
+      self.class.new(@__buffer.dup << other.safe_attribute.dup)
     end
 
     def safe_attribute
-      @buffer
+      @__buffer
     end
 
     private
 
-    attr_reader :buffer
+    QUOTE = '"'.freeze
+
+    def write(name, value)
+      @__buffer << name << ERB::Escape.html_escape(value) << QUOTE
+    end
   end
 end
