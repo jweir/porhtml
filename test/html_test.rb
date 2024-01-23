@@ -7,6 +7,7 @@ require 'minitest/spec'
 class HtmlTest < Minitest::Test
   extend Minitest::Spec::DSL
 
+  Item = Struct.new(:name)
   A = Html::Attribute
 
   class X < Html::Template
@@ -31,12 +32,15 @@ class HtmlTest < Minitest::Test
   end
 
   class Z < Html::Template
+    def initialize
+      @value = 'Z'
+      super
+    end
+
     def call
-      h1 { text 'Z' }
+      h1 { text @value }
     end
   end
-
-  Item = Struct.new(:name)
 
   specify 'comments supported' do
     assert_equal '<p><!--no comment--></p>', Html::Template.new.p { comment { text 'no comment' } }.render
@@ -47,9 +51,6 @@ class HtmlTest < Minitest::Test
     result = Y.new.call(Item.new('Joe'))
     assert_equal result.render, '<div id="ok">Joe</div><h1>Z</h1>'
   end
-
-  # TODO: support comments
-  # TODO: support CDATA
 
   def test_html
     assert_equal \
@@ -241,43 +242,3 @@ class HtmlTemplateTest < Minitest::Test
     assert_equal expected_structure, @template.render
   end
 end
-
-# style
-# property
-# attribute
-# class
-# id
-# title
-# hidden
-# type
-# value
-# checked
-# disabled
-# placeholder
-# selected
-# -- input
-# accept
-# acceptCharset
-# action
-# autocomplete
-# autofocus
-# disabled
-# enctype
-# list
-# maxlength
-# minlength
-# multiple
-# name
-# novalidate
-# pattern
-# readonly
-# required
-# size
-# for
-# form
-#
-#
-#
-#
-#
-#
