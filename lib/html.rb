@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 
 require './lib/html/node_definitions'
 require './lib/html/attribute_definitions'
@@ -6,12 +7,12 @@ require 'erb/escape'
 # nodoc
 module Html
   # nodoc
-  class Core
+  class Writer
     def initialize
       @__buffer = +''
     end
 
-    def insert(func)
+    def include(func)
       begin
         @__buffer << func.render
       rescue StandardError
@@ -23,6 +24,10 @@ module Html
     def text(value)
       @__buffer << ERB::Escape.html_escape(value)
       self
+    end
+
+    def attr(&block)
+      Attribute.new(&block)
     end
 
     def comment(&elements)
@@ -40,8 +45,8 @@ module Html
 
     private
 
-    CLOSE = '>'.freeze
-    CLOSE_VOID = '/>'.freeze
+    CLOSE = '>'
+    CLOSE_VOID = '/>'
 
     def write(open, close, attr = nil, closing_char: CLOSE, closing_void_char: CLOSE_VOID, &block)
       @__buffer << open << Attribute.to_html(attr)
@@ -66,7 +71,7 @@ module Html
   end
 
   # nodoc
-  class Template < Html::Core
+  class Template < Html::Writer
     include Html::NodeDefinitions::HTMLAllElements
   end
 
@@ -94,7 +99,7 @@ module Html
 
     private
 
-    QUOTE = '"'.freeze
+    QUOTE = '"'
 
     def write(name, value)
       @__buffer << name << ERB::Escape.html_escape(value) << QUOTE

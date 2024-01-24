@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 
 require './lib/html'
 require 'minitest/autorun'
@@ -18,15 +19,15 @@ class HtmlTest < Minitest::Test
         text(item.name)
         br
         b { text('Hello & good "byte"') }
-        insert(content) if content
+        include(content) if content
       end
     end
   end
 
   class Y < Html::Template
     def call(item)
-      div(A.new { id('ok') }) { text item.name }
-      insert(Z.new.call)
+      div(attr { id('ok') }) { text item.name }
+      include(Z.new.call)
     end
   end
 
@@ -46,7 +47,7 @@ class HtmlTest < Minitest::Test
     assert_equal '<p><!----></p>', Html::Template.new.p { comment }.render, 'empty comment'
   end
 
-  specify 'insert can take a template' do
+  specify 'include can take a template' do
     result = Y.new.call(Item.new('Joe'))
     assert_equal result.render, '<div id="ok">Joe</div><h1>Z</h1>'
   end

@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 
 require './lib/html'
 require 'benchmark/ips'
@@ -6,18 +7,18 @@ class Layout < Html::Template
   A = Html::Attribute
 
   def call
-    title(A.new { title('Example') })
-    meta(A.new do
-           name('viewport')
-           content('width=device-width,initial-scale=1')
-         end)
-    link(A.new do
-           href('/assets/tailwind.css')
-           rel('stylesheet')
-         end)
-    body(A.new { klass('bg-zinc-100') }) do
+    title(attr { title('Example') })
+    meta(attr do
+      name('viewport')
+      content('width=device-width,initial-scale=1')
+    end)
+    link(attr do
+      href('/assets/tailwind.css')
+      rel('stylesheet')
+    end)
+    body(attr { klass('bg-zinc-100') }) do
       nav(
-        A.new do
+        attr do
           klass('p-5')
           id('main_nav')
         end
@@ -26,9 +27,9 @@ class Layout < Html::Template
         attr.klass 'p-5'
 
         ul do
-          li(attr) { a(A.new { href('/') }) { text('Home') } }
-          li(attr) { a(A.new { href('/about') }) { text('About') } }
-          li(attr) { a(A.new { href('/contact') }) { text('Concat') } }
+          li(attr) { a(attr { href('/') }) { text('Home') } }
+          li(attr) { a(attr { href('/about') }) { text('About') } }
+          li(attr) { a(attr { href('/contact') }) { text('Concat') } }
         end
       end
 

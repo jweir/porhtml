@@ -7,6 +7,10 @@ module Html
       write(' id="', value)
     end
 
+    def lang(value)
+      write(' lang="', value)
+    end
+
     # FIXME: need to auto map `class` to `klass`
     def klass(value)
       write(' class="', value)
