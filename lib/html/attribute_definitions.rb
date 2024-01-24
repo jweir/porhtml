@@ -1,11 +1,8 @@
 # frozen_string_literal: true
-# typed: false
 
 module Html
   # nodoc
   module AttributeDefinitions
-    # extend T::Sig
-
     def id(value)
       write(' id="', value)
     end

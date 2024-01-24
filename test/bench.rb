@@ -1,10 +1,6 @@
-# typed: true
 
 require './lib/html'
 require 'benchmark/ips'
-# require 'sorbet-runtime'
-
-# T::Configuration.default_checked_level = :never
 
 class Layout < Html::Template
   A = Html::Attribute

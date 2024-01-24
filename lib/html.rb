@@ -1,6 +1,4 @@
-# typed: false
 
-# require 'sorbet-runtime'
 require './lib/html/node_definitions'
 require './lib/html/attribute_definitions'
 require 'erb/escape'

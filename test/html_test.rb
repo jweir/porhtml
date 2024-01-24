@@ -1,4 +1,3 @@
-# xtyped: true
 
 require './lib/html'
 require 'minitest/autorun'
