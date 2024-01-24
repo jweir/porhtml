@@ -43,5 +43,10 @@ module Html
     def alt(value)
       write(' alt="', value)
     end
+
+    # valueless attributes
+    def disabled(state = true)
+      write_empty(' disabled', state)
+    end
   end
 end

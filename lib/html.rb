@@ -84,25 +84,27 @@ module Html
       attr&.safe_attribute.to_s
     end
 
-    def initialize(buffer = +'', &block)
+    def initialize(buffer = {}, &block)
       @__buffer = buffer
       instance_eval(&block) if block
     end
 
-    def <<(other)
-      self.class.new(@__buffer.dup << other.safe_attribute.dup)
+    def merge(other)
+      self.class.new(@__buffer.merge(other.instance_variable_get(:@__buffer)))
     end
 
     def safe_attribute
-      @__buffer
+      @__buffer.values.join
     end
 
     private
 
-    QUOTE = '"'
-
     def write(name, value)
-      @__buffer << name << ERB::Escape.html_escape(value) << QUOTE
+      @__buffer[name] = "#{name}#{ERB::Escape.html_escape(value)}\""
+    end
+
+    def write_empty(name, print)
+      @__buffer[name] = print ? name : ''
     end
   end
 end

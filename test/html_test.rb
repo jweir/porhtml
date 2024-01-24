@@ -111,14 +111,31 @@ class HtmlTest < Minitest::Test
 
     b = Html::Attribute.new { name('foo') }
 
-    c = a << b
+    c = a.merge(b)
 
     assert_equal 'class="ok" id="1"', a.safe_attribute.strip
     assert_equal 'name="foo"', b.safe_attribute.strip
     assert_equal 'class="ok" id="1" name="foo"', c.safe_attribute.strip
   end
 
-  require 'debug'
+  specify 'attributes do not allow attributes to defined more than once' do
+    a = Html::Attribute.new do
+      id('one')
+      name('ok')
+      id('"two"')
+    end
+    c = a.merge(Html::Attribute.new { id('three') })
+    assert_equal ' id="&quot;two&quot;" name="ok"', a.safe_attribute
+    assert_equal ' id="three" name="ok"', c.safe_attribute
+  end
+
+  specify 'support valueless attribtes' do
+    a = Html::Attribute.new { disabled }
+    b = a.merge(Html::Attribute.new { disabled(false) })
+    assert_equal ' disabled', a.safe_attribute
+    assert_equal '', b.safe_attribute
+  end
+
   def test_thread_safety
     100.times do
       thread_safety
