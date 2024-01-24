@@ -47,18 +47,22 @@ class HtmlTest < Minitest::Test
     assert_equal '<p><!----></p>', Html::Template.new.p { comment }.render, 'empty comment'
   end
 
+  specify 'doctype supported' do
+    assert_equal '<!DOCTYPE html>', Html::Template.new.doctype.render
+  end
+
   specify 'include can take a template' do
     result = Y.new.call(Item.new('Joe'))
     assert_equal result.render, '<div id="ok">Joe</div><h1>Z</h1>'
   end
 
-  def test_html
+  specify 'renders HTML and attributes' do
     assert_equal \
       '<h1 id="big" class="a &quot;b&quot; c">ITEM<br/><b>Hello &amp; good &quot;byte&quot;</b></h1>',
       X.new.call(Item.new('ITEM')).render
   end
 
-  def test_whitespace
+  specify 'handles whitespace correctly' do
     t = Html::Template.new.html do
       text(
         <<~TXT
@@ -73,11 +77,7 @@ class HtmlTest < Minitest::Test
     assert_equal "<html>Hello,\n\nMy name is Joe.\nBye.\n</html>", t.render
   end
 
-  def test_doctype
-    assert_equal '<!DOCTYPE html>', Html::Template.new.doctype.render
-  end
-
-  def test_html_appending_and_binding
+  specify 'supports appending and binding' do
     t = Html::Template.new
     value = 'ok' # this would be bound to the block
     @value = 'not_present' # this should not be bound
@@ -86,24 +86,25 @@ class HtmlTest < Minitest::Test
     assert_equal '<h1><b>ok</b></h1><span></span>', t.render
   end
 
-  def test_without_a_block
+  specify 'does not require a block' do
     assert_equal \
       '<title title="Ok"/>',
       Html::Template.new.title(A.new { title 'Ok' }).render
   end
 
-  def test_html_with_extension
+  specify 'processes lambdas as a block' do
     assert_equal \
       '<h1 id="big" class="a &quot;b&quot; c">ITEM<br/><b>Hello &amp; good &quot;byte&quot;</b><b>ok</b></h1>',
       X.new.call(Item.new('ITEM'), content: -> { b { text 'ok' } }).render
   end
 
-  def test_text_html_is_escaped
+  specify 'text is html escaped' do
     t = Html::Template.new
     assert_equal '&lt;script&gt;x&lt;/script&gt;', t.text('<script>x</script>').render
   end
 
-  def test_attribute
+  # Attributes
+  specify 'attributes are supported' do
     a = Html::Attribute.new do
       klass('ok')
       id('1')
@@ -129,14 +130,15 @@ class HtmlTest < Minitest::Test
     assert_equal ' id="three" name="ok"', c.safe_attribute
   end
 
-  specify 'support valueless attribtes' do
+  specify 'support valueless attributes' do
     a = Html::Attribute.new { disabled }
     b = a.merge(Html::Attribute.new { disabled(false) })
     assert_equal ' disabled', a.safe_attribute
     assert_equal '', b.safe_attribute
   end
 
-  def test_thread_safety
+  # Threads
+  it 'is thread safe' do
     100.times do
       thread_safety
     end
