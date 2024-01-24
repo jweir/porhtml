@@ -7,14 +7,11 @@ require 'erb/escape'
 # nodoc
 module Html
   # nodoc
-  class Writer
-    def initialize
-      @__buffer = +''
-    end
-
+  module Writer
     def include(func)
       begin
         @__buffer << func.render
+      # it is faster to error and try than to detect the type and branch
       rescue StandardError
         instance_exec(&func)
       end
@@ -22,7 +19,7 @@ module Html
     end
 
     def text(value)
-      @__buffer << ERB::Escape.html_escape(value)
+      (@__buffer ||= +'') << ERB::Escape.html_escape(value)
       self
     end
 
@@ -35,12 +32,15 @@ module Html
     end
 
     def doctype
-      @__buffer << '<!DOCTYPE html>'
+      (@__buffer ||= +'') << '<!DOCTYPE html>'
       self
     end
 
     def render
       @__buffer
+    ensure
+      # empty the buffer to prevent double rendering
+      @__buffer = +''
     end
 
     private
@@ -49,15 +49,14 @@ module Html
     CLOSE_VOID = '/>'
 
     def write(open, close, attr = nil, closing_char: CLOSE, closing_void_char: CLOSE_VOID, &block)
-      @__buffer << open << Attribute.to_html(attr)
+      (@__buffer ||= +'') << open << Attribute.to_html(attr)
 
       if block
         @__buffer << closing_char
 
         begin
           yield
-        # this is faster, at least in the default than using an if and checking
-        # the type on the receiver
+        # it is faster to error and try than to detect the type and branch
         rescue StandardError
           instance_eval(&block)
         end
@@ -71,7 +70,8 @@ module Html
   end
 
   # nodoc
-  class Template < Html::Writer
+  class Template
+    include Html::Writer
     include Html::NodeDefinitions::HTMLAllElements
   end
 

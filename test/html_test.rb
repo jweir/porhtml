@@ -62,6 +62,13 @@ class HtmlTest < Minitest::Test
       X.new.call(Item.new('ITEM')).render
   end
 
+  specify 'does not double render' do
+    t = Z.new
+    t.call.render
+    result = t.call.render
+    assert_equal '<h1>Z</h1>', result
+  end
+
   specify 'handles whitespace correctly' do
     t = Html::Template.new.html do
       text(
