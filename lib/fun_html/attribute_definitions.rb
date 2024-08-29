@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-module Html
+module FunHtml
   # nodoc
   module AttributeDefinitions
     def id(value)

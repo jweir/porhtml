@@ -1,16 +1,16 @@
 # frozen_string_literal: true
 
-require './lib/html'
+require './lib/fun_html'
 require 'minitest/autorun'
 require 'minitest/spec'
 
-class HtmlTest < Minitest::Test
+class FunHtmlTest < Minitest::Test
   extend Minitest::Spec::DSL
 
   Item = Struct.new(:name)
-  A = Html::Attribute
+  A = FunHtml::Attribute
 
-  class X < Html::Template
+  class X < FunHtml::Template
     def call(item, content: nil)
       h1(A.new do
            id('big')
@@ -24,14 +24,14 @@ class HtmlTest < Minitest::Test
     end
   end
 
-  class Y < Html::Template
+  class Y < FunHtml::Template
     def call(item)
       div(attr { id('ok') }) { text item.name }
       include(Z.new.call)
     end
   end
 
-  class Z < Html::Template
+  class Z < FunHtml::Template
     def initialize
       @value = 'Z'
       super
@@ -43,12 +43,12 @@ class HtmlTest < Minitest::Test
   end
 
   specify 'comments supported' do
-    assert_equal '<p><!--no comment--></p>', Html::Template.new.p { comment { text 'no comment' } }.render
-    assert_equal '<p><!----></p>', Html::Template.new.p { comment }.render, 'empty comment'
+    assert_equal '<p><!--no comment--></p>', FunHtml::Template.new.p { comment { text 'no comment' } }.render
+    assert_equal '<p><!----></p>', FunHtml::Template.new.p { comment }.render, 'empty comment'
   end
 
   specify 'doctype supported' do
-    assert_equal '<!DOCTYPE html>', Html::Template.new.doctype.render
+    assert_equal '<!DOCTYPE html>', FunHtml::Template.new.doctype.render
   end
 
   specify 'include can take a template' do
@@ -70,7 +70,7 @@ class HtmlTest < Minitest::Test
   end
 
   specify 'handles whitespace correctly' do
-    t = Html::Template.new.html do
+    t = FunHtml::Template.new.html do
       text(
         <<~TXT
           Hello,
@@ -85,7 +85,7 @@ class HtmlTest < Minitest::Test
   end
 
   specify 'supports appending and binding' do
-    t = Html::Template.new
+    t = FunHtml::Template.new
     value = 'ok' # this would be bound to the block
     @value = 'not_present' # this should not be bound
     t.h1 { b { text(value) } }
@@ -96,7 +96,7 @@ class HtmlTest < Minitest::Test
   specify 'does not require a block' do
     assert_equal \
       '<title title="Ok"/>',
-      Html::Template.new.title(A.new { title 'Ok' }).render
+      FunHtml::Template.new.title(A.new { title 'Ok' }).render
   end
 
   specify 'processes lambdas as a block' do
@@ -106,18 +106,18 @@ class HtmlTest < Minitest::Test
   end
 
   specify 'text is html escaped' do
-    t = Html::Template.new
+    t = FunHtml::Template.new
     assert_equal '&lt;script&gt;x&lt;/script&gt;', t.text('<script>x</script>').render
   end
 
   # Attributes
   specify 'attributes are supported' do
-    a = Html::Attribute.new do
+    a = FunHtml::Attribute.new do
       klass('ok')
       id('1')
     end
 
-    b = Html::Attribute.new { name('foo') }
+    b = FunHtml::Attribute.new { name('foo') }
 
     c = a.merge(b)
 
@@ -127,19 +127,19 @@ class HtmlTest < Minitest::Test
   end
 
   specify 'attributes do not allow attributes to defined more than once' do
-    a = Html::Attribute.new do
+    a = FunHtml::Attribute.new do
       id('one')
       name('ok')
       id('"two"')
     end
-    c = a.merge(Html::Attribute.new { id('three') })
+    c = a.merge(FunHtml::Attribute.new { id('three') })
     assert_equal ' id="&quot;two&quot;" name="ok"', a.safe_attribute
     assert_equal ' id="three" name="ok"', c.safe_attribute
   end
 
   specify 'support valueless attributes' do
-    a = Html::Attribute.new { disabled }
-    b = a.merge(Html::Attribute.new { disabled(false) })
+    a = FunHtml::Attribute.new { disabled }
+    b = a.merge(FunHtml::Attribute.new { disabled(false) })
     assert_equal ' disabled', a.safe_attribute
     assert_equal '', b.safe_attribute
   end
@@ -158,7 +158,7 @@ class HtmlTest < Minitest::Test
     # Create a number of threads and generate HTML in each one
     threads = 5.times.map do |n|
       Thread.new do
-        outputs << Html::Attribute.new do
+        outputs << FunHtml::Attribute.new do
           sleep 0.01 if [1].include?(n)
           id n.to_s
           klass n.to_s
@@ -183,10 +183,10 @@ class HtmlTest < Minitest::Test
 end
 
 # set of OpenAI generated tests
-class HtmlTemplateTest < Minitest::Test
-  A = Html::Attribute
+class FunHtmlTemplateTest < Minitest::Test
+  A = FunHtml::Attribute
   def setup
-    @template = Html::Template.new
+    @template = FunHtml::Template.new
   end
 
   def test_text_sanitization
@@ -196,7 +196,7 @@ class HtmlTemplateTest < Minitest::Test
   end
 
   def test_void_elements
-    r = Html::Template.new.html do
+    r = FunHtml::Template.new.html do
       br
       hr
       img(A.new { href '/image' })

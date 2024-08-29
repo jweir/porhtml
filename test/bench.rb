@@ -1,10 +1,10 @@
 # frozen_string_literal: true
 
-require './lib/html'
+require './lib/fun_html'
 require 'benchmark/ips'
 
-class Layout < Html::Template
-  A = Html::Attribute
+class Layout < FunHtml::Template
+  A = FunHtml::Attribute
 
   def call
     title(attr { title('Example') })
@@ -53,8 +53,8 @@ class Layout < Html::Template
 end
 
 class HtmlBenchmark
-  include Html
-  A = Html::Attribute
+  include FunHtml
+  A = FunHtml::Attribute
 
   def template
     Layout.new.call.render

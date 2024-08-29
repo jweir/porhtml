@@ -1,5 +1,5 @@
 default:
-	find . -name "*.rb" | entr rake
+	find . -name "*.rb" | entr bundle exec rake
 
 bench:
 	find . -name "*.rb" | entr ruby test/bench.rb

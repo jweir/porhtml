@@ -1,11 +1,11 @@
 # frozen_string_literal: true
 
-require './lib/html/node_definitions'
-require './lib/html/attribute_definitions'
+require './lib/fun_html/node_definitions'
+require './lib/fun_html/attribute_definitions'
 require 'erb/escape'
 
 # nodoc
-module Html
+module FunHtml
   # nodoc
   module Writer
     def include(func)
@@ -23,8 +23,8 @@ module Html
       self
     end
 
-    def attr(&block)
-      Attribute.new(&block)
+    def attr(&)
+      Attribute.new(&)
     end
 
     def comment(&elements)
@@ -71,13 +71,13 @@ module Html
 
   # nodoc
   class Template
-    include Html::Writer
-    include Html::NodeDefinitions::HTMLAllElements
+    include FunHtml::Writer
+    include FunHtml::NodeDefinitions::HTMLAllElements
   end
 
   # nodoc
   class Attribute
-    include Html::AttributeDefinitions
+    include FunHtml::AttributeDefinitions
 
     # only allow nil or objects that respond to `safe_attribute`
     def self.to_html(attr)

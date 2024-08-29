@@ -3,7 +3,7 @@
 require 'json'
 require 'sorbet-runtime'
 
-module Html
+module FunHtml
   # generates the HTML node definitions
   # https://html.spec.whatwg.org/multipage/syntax.html#void-elements
   module Generator
