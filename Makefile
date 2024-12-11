@@ -11,5 +11,5 @@ update:
 	bin/tapioca todo
 
 generate:
-	ruby -r ./lib/html/generator.rb -e 'Html::Generator.call'
-	rubocop -A lib/html/node_definitions.rb
+	ruby -r ./lib/fun_html/generator.rb -e 'FunHtml::Generator.call'
+	rubocop -A lib/fun_html/node_definitions.rb
