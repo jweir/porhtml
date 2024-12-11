@@ -13,3 +13,7 @@ update:
 generate:
 	ruby -r ./lib/fun_html/generator.rb -e 'FunHtml::Generator.call'
 	rubocop -A lib/fun_html/node_definitions.rb
+
+attr:
+	ruby -r ./lib/fun_html/attribute_generator.rb -e 'FunHtml::AttributeGenerator.call'
+	rubocop -A lib/fun_html/attribute_definitions.rb
