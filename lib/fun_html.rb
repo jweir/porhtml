@@ -2,6 +2,7 @@
 
 require './lib/fun_html/node_definitions'
 require './lib/fun_html/attribute_definitions'
+require_relative 'fun_html/version'
 require 'erb/escape'
 
 # nodoc
