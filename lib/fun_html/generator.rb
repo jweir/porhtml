@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 require 'json'
-require 'sorbet-runtime'
 
 module FunHtml
   # generates the HTML node definitions
