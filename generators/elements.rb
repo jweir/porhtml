@@ -2,10 +2,10 @@
 
 require 'json'
 
-module FunHtml
+module Generators
   # generates the HTML node definitions
   # https://html.spec.whatwg.org/multipage/syntax.html#void-elements
-  module Generator
+  module Elements
     VOID = %w[area base br col embed hr img input link meta source track wbr].freeze
 
     def self.call

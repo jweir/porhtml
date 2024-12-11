@@ -1,8 +1,9 @@
 # frozen_string_literal: true
 
-module FunHtml
-  module AttributeGenerator
-    # generated list via Claude.ai
+module Generators
+  # generate all the HTML5 attribute methods
+  # list created via Claude.ai - blame the AI if it is wrong
+  module Attributes
     ATTRIBUTES = {
       'accept' => { values: ['audio/*', 'video/*', 'image/*'], type: :string },
       'accept-charset' => { values: nil, type: :string },
