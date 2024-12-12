@@ -10,7 +10,7 @@ module FunHtml
   module Writer
     def include(func); end
 
-    sig {parms(value: String).returns(T.self_type)}
+    sig { params(value: String).returns(T.self_type) }
     def text(value); end
 
     sig { params(blk: T.proc.bind(FunHtml::Attribute).void).returns(FunHtml::Attribute) }

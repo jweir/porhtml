@@ -4,7 +4,7 @@ require_relative('../lib/fun_html')
 
 a = FunHtml::Attribute.new
 
-a.disabled
+a.disabled true
 
 b = FunHtml::Attribute.new do
   id('big')

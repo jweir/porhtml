@@ -141,7 +141,7 @@ class FunHtmlTest < Minitest::Test
   end
 
   specify 'support valueless attributes' do
-    a = FunHtml::Attribute.new { disabled }
+    a = FunHtml::Attribute.new { disabled(true) }
     b = a.merge(FunHtml::Attribute.new { disabled(false) })
     assert_equal ' disabled', a.safe_attribute
     assert_equal '', b.safe_attribute

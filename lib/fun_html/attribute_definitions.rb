@@ -16,13 +16,13 @@ module FunHtml
     # Alternative text for images
     def alt(value) = write(' alt="', value)
     # Script should execute asynchronously
-    def async(state = true) = write_empty(' async', state)
+    def async(value) = write_empty(' async', value)
     # Form/input autocompletion
     def autocomplete(value) = write(' autocomplete="', value)
     # Element should be focused on page load
-    def autofocus(state = true) = write_empty(' autofocus', state)
+    def autofocus(value) = write_empty(' autofocus', value)
     # Media will start playing automatically
-    def autoplay(state = true) = write_empty(' autoplay', state)
+    def autoplay(value) = write_empty(' autoplay', value)
     # Background color of element
     def bgcolor(value) = write(' bgcolor="', value)
     # Border width in pixels
@@ -30,7 +30,7 @@ module FunHtml
     # Character encoding of document
     def charset(value) = write(' charset="', value)
     # Whether checkbox/radio button is selected
-    def checked(state = true) = write_empty(' checked', state)
+    def checked(value) = write_empty(' checked', value)
     # CSS class name(s) for styling
     def klass(value) = write(' class="', value)
     # Number of columns in textarea
@@ -42,7 +42,7 @@ module FunHtml
     # Whether content is editable
     def contenteditable(value) = write(' contenteditable="', value)
     # Show media playback controls
-    def controls(state = true) = write_empty(' controls', state)
+    def controls(value) = write_empty(' controls', value)
     # Coordinates for image maps
     def coords(value) = write(' coords="', value)
     # Custom data attributes
@@ -50,13 +50,13 @@ module FunHtml
     # Date/time of element content
     def datetime(value) = write(' datetime="', value)
     # Default track for media
-    def default(state = true) = write_empty(' default', state)
+    def default(value) = write_empty(' default', value)
     # Script should execute after parsing
-    def defer(state = true) = write_empty(' defer', state)
+    def defer(value) = write_empty(' defer', value)
     # Text direction
     def dir(value) = write(' dir="', value)
     # Element is disabled
-    def disabled(state = true) = write_empty(' disabled', state)
+    def disabled(value) = write_empty(' disabled', value)
     # Resource should be downloaded
     def download(value) = write(' download="', value)
     # Element can be dragged
@@ -74,7 +74,7 @@ module FunHtml
     # Height of element
     def height(value) = write(' height="', value)
     # Element is not displayed
-    def hidden(state = true) = write_empty(' hidden', state)
+    def hidden(value) = write_empty(' hidden', value)
     # Upper range of meter
     def high(value) = write(' high="', value)
     # URL of linked resource
@@ -86,7 +86,7 @@ module FunHtml
     # Subresource integrity hash
     def integrity(value) = write(' integrity="', value)
     # Image is server-side image map
-    def ismap(state = true) = write_empty(' ismap', state)
+    def ismap(value) = write_empty(' ismap', value)
     # Type of text track
     def kind(value) = write(' kind="', value)
     # Label for form control/option
@@ -96,7 +96,7 @@ module FunHtml
     # Links input to datalist options
     def list(value) = write(' list="', value)
     # Media will replay when finished
-    def loop(state = true) = write_empty(' loop', state)
+    def loop(value) = write_empty(' loop', value)
     # Lower range of meter
     def low(value) = write(' low="', value)
     # Maximum allowed value
@@ -110,15 +110,15 @@ module FunHtml
     # Minimum allowed value
     def min(value) = write(' min="', value)
     # Multiple values can be selected
-    def multiple(state = true) = write_empty(' multiple', state)
+    def multiple(value) = write_empty(' multiple', value)
     # Media is muted by default
-    def muted(state = true) = write_empty(' muted', state)
+    def muted(value) = write_empty(' muted', value)
     # Name of form control
     def name(value) = write(' name="', value)
     # Form validation is skipped
-    def novalidate(state = true) = write_empty(' novalidate', state)
+    def novalidate(value) = write_empty(' novalidate', value)
     # Details element is expanded
-    def open(state = true) = write_empty(' open', state)
+    def open(value) = write_empty(' open', value)
     # Optimal value for meter
     def optimum(value) = write(' optimum="', value)
     # Regular expression pattern
@@ -130,13 +130,13 @@ module FunHtml
     # How media should be loaded
     def preload(value) = write(' preload="', value)
     # Input field cannot be modified
-    def readonly(state = true) = write_empty(' readonly', state)
+    def readonly(value) = write_empty(' readonly', value)
     # Relationship of linked resource
     def rel(value) = write(' rel="', value)
     # Input must be filled out
-    def required(state = true) = write_empty(' required', state)
+    def required(value) = write_empty(' required', value)
     # List is numbered in reverse
-    def reversed(state = true) = write_empty(' reversed', state)
+    def reversed(value) = write_empty(' reversed', value)
     # Number of rows in textarea
     def rows(value) = write(' rows="', value)
     # Number of rows a cell spans
@@ -146,7 +146,7 @@ module FunHtml
     # Cells header element relates to
     def scope(value) = write(' scope="', value)
     # Option is pre-selected
-    def selected(state = true) = write_empty(' selected', state)
+    def selected(value) = write_empty(' selected', value)
     # Shape of image map area
     def shape(value) = write(' shape="', value)
     # Size of input/select control
