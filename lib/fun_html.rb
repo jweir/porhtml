@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
-require './lib/fun_html/node_definitions'
-require './lib/fun_html/attribute_definitions'
+require_relative 'fun_html/node_definitions'
+require_relative 'fun_html/attribute_definitions'
 require_relative 'fun_html/version'
 require 'erb/escape'
 
@@ -24,8 +24,8 @@ module FunHtml
       self
     end
 
-    def attr(&)
-      Attribute.new(&)
+    def attr(&blk) # rubocop:disable Style/ArgumentsForwarding
+      Attribute.new(&blk) # rubocop:disable Style/ArgumentsForwarding
     end
 
     def comment(&elements)
@@ -34,7 +34,6 @@ module FunHtml
 
     def doctype
       (@__buffer ||= +'') << '<!DOCTYPE html>'
-      self
     end
 
     def render
@@ -85,11 +84,13 @@ module FunHtml
       attr&.safe_attribute.to_s
     end
 
+    # create a new Attribute object to create reuseable attributes
     def initialize(buffer = {}, &block)
       @__buffer = buffer
       instance_eval(&block) if block
     end
 
+    # merge two attribute sets together
     def merge(other)
       self.class.new(@__buffer.merge(other.instance_variable_get(:@__buffer)))
     end

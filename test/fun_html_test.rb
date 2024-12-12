@@ -1,3 +1,4 @@
+# typed: true
 # frozen_string_literal: true
 
 require './lib/fun_html'
@@ -48,7 +49,9 @@ class FunHtmlTest < Minitest::Test
   end
 
   specify 'doctype supported' do
-    assert_equal '<!DOCTYPE html>', FunHtml::Template.new.doctype.render
+    template = FunHtml::Template.new
+    template.doctype
+    assert_equal '<!DOCTYPE html>', template.render
   end
 
   specify 'include can take a template' do

@@ -13,4 +13,5 @@ update:
 generate:
 	ruby -r ./generators/elements.rb -e 'Generators::Elements.call'
 	ruby -r ./generators/attributes.rb -e 'Generators::Attributes.call'
-	rubocop -A lib/fun_html/node_definitions.rb lib/fun_html/attribute_definitions.rb
+	cat rbi/*.rbx > rbi/fun_html.rbi
+	rubocop -A lib/fun_html/node_definitions.rb lib/fun_html/attribute_definitions.rb rbi/**

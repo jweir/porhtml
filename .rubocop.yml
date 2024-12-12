@@ -21,3 +21,5 @@ Naming/BlockForwarding:
 Metrics/MethodLength:
   Enabled: false
 
+Style/RedundantInitialize:
+  Enabled: false

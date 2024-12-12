@@ -8,3 +8,5 @@ bin
 /pkg/
 /spec/reports/
 /tmp/
+/.vim/
+/sorbet/

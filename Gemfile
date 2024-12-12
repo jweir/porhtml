@@ -7,4 +7,6 @@ gem 'rake'
 group :development, :test do
   gem 'benchmark-ips'
   gem 'rubocop'
+  gem 'sorbet'
+  gem 'tapioca'
 end
