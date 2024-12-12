@@ -20,7 +20,7 @@ Gem::Specification.new do |spec|
   spec.metadata['changelog_uri'] = 'https://github.com/jweir/fun_html/CHANGES.md'
 
   spec.files = Dir['lib/**/**', 'sig/**/**']
-  spec.require_paths = ['lib']
+  spec.require_paths = %w[lib rbi]
 
   # Uncomment to register a new dependency of your gem
   # spec.add_dependency "example-gem", "~> 1.0"
