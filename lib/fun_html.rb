@@ -34,6 +34,7 @@ module FunHtml
 
     def doctype
       (@__buffer ||= +'') << '<!DOCTYPE html>'
+      self
     end
 
     def render

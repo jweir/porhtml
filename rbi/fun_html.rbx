@@ -15,7 +15,7 @@ module FunHtml
     def attr(&blk); end
     def comments(&elements); end
 
-    sig { returns(String) }
+    sig { returns(T.self_type) }
     def doctype; end
 
     sig { returns(String) }

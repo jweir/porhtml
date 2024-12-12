@@ -24,6 +24,15 @@ end
 end
 
 class Template < FunHtml::Template
+  extend T::Sig
+
+  sig { returns(Template) }
+
+  def test
+    doctype
+  end
+
+  sig { params(items: T::Array[Item]).returns(Template) }
   def call(items)
     doctype
     html(attr do
