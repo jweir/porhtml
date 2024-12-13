@@ -113,6 +113,14 @@ class FunHtmlTest < Minitest::Test
     assert_equal '&lt;script&gt;x&lt;/script&gt;', t.text('<script>x</script>').render
   end
 
+  specify 'the data attibutes requires the name portion' do
+    assert_equal(' data-abc-def="ok"', FunHtml::Attribute.new { data('abc-def', 'ok') }.safe_attribute)
+
+    assert_raises do
+      FunHtml::Attribute.new { data('abc:def', 'ok') }.safe_attribute
+    end
+  end
+
   # Attributes
   specify 'attributes are supported' do
     a = FunHtml::Attribute.new do

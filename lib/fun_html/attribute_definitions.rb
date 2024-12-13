@@ -45,8 +45,17 @@ module FunHtml
     def controls(value) = write_empty(' controls', value)
     # Coordinates for image maps
     def coords(value) = write(' coords="', value)
+
     # Custom data attributes
-    def data(value) = write(' data="', value)
+    def data(suffix, value)
+      unless suffix.match?(/\A[a-z-]+\z/)
+        raise ArgumentError,
+              "suffix (#{suffix}) must be lowercase and only contain 'a' to 'z' or hyphens."
+      end
+
+      write(" data-#{suffix}=\"", value)
+    end
+
     # Date/time of element content
     def datetime(value) = write(' datetime="', value)
     # Default track for media

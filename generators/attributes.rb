@@ -127,30 +127,44 @@ module Generators
         name = clean_name(attr_name)
         doc = "# #{meta[:desc]}\n"
 
-        doc +
-          case meta[:type]
-          in :boolean
-            "def #{name}(value) = write_empty(' #{attr_name}', value)"
-          in
-            :boolean_or_string |
-              :color |
-              :datetime |
-              :enum |
-              :number |
-              :number_or_datetime |
-              :number_or_string |
-              :string |
-              :url
-            "def #{name}(value) = write(' #{attr_name}=\"', value)"
-          else
-            raise meta[:type].to_s
-          end
+        # the madness of exceptions
+        if attr_name == 'data'
+          ["# #{meta[:desc]}",
+           "def #{name}(suffix, value)",
+           'raise ArgumentError, "suffix (#{suffix}) must be lowercase and only contain \'a\' to \'z\' or hyphens." unless suffix.match?(/\A[a-z-]+\z/) ',
+           "write(' #{attr_name}-'+suffix+'=\"', value)",
+           'end'].join("\n")
+        else
+          doc +
+            case meta[:type]
+            in :boolean
+              "def #{name}(value) = write_empty(' #{attr_name}', value)"
+            in
+              :boolean_or_string |
+                :color |
+                :datetime |
+                :enum |
+                :number |
+                :number_or_datetime |
+                :number_or_string |
+                :string |
+                :url
+              "def #{name}(value) = write(' #{attr_name}=\"', value)"
+            else
+              raise meta[:type].to_s
+            end
+        end
       end
     end
 
     def self.rbi_sigs
       ATTRIBUTES.map do |attr_name, meta|
         name = clean_name(attr_name)
+
+        if name == 'data'
+          return ['sig { params(suffix: String, value: T::Boolean).void }',
+                  "def #{name}(suffix, value);end"]
+        end
 
         method =
           case meta[:type]
