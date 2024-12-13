@@ -1148,7 +1148,7 @@ module FunHtml
     def controls(value); end
     sig { params(value: String).void }
     def coords(value); end
-    sig { params(suffix: String, value: T::Boolean).void }
+    sig { params(suffix: String, value: String).void }
     def data(suffix, value); end
     sig { params(value: String).void }
     def datetime(value); end

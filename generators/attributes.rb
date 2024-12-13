@@ -162,7 +162,7 @@ module Generators
         name = clean_name(attr_name)
 
         if name == 'data'
-          ['sig { params(suffix: String, value: T::Boolean).void }',
+          ['sig { params(suffix: String, value: String).void }',
            "def #{name}(suffix, value);end"].join("\n")
         else
           method =
